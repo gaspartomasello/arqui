@@ -24,7 +24,8 @@ GitHub Pages, servidor en la red local (`servidor-lan.py`) o repartir el archivo
 | Rotar | `R` (90°) · `Shift+R` (45°) — o los botones ↺ ↻ 45° del panel |
 | Pintar / llenar un ambiente entero | `Shift` + click con la brocha o con un solado |
 | Deshacer / rehacer | `Ctrl+Z` / `Ctrl+Y` (también ↶ ↷ arriba) |
-| Mover la cámara | Arrastrar con el botón derecho, flechas o `WASD`, o llevar el cursor al borde de la pantalla |
+| Mover la cámara | Arrastrar con el botón derecho, flechas o `WASD`, o llevar el cursor a un borde (se enciende una franja verde avisando) |
+| Ver el terreno a pantalla completa | Botón **▼ Ocultar panel**, abajo a la derecha |
 | Rotar la cámara 90° | `,` y `.` (o `Q` / `E`, o los botones de la brújula) |
 | Zoom | Rueda del mouse o `+` / `-` |
 | Demoler | `X` o `Supr` (también la herramienta 💥) |
