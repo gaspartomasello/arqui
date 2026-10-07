@@ -26,7 +26,8 @@ GitHub Pages, servidor en la red local (`servidor-lan.py`) o repartir el archivo
 | Colocar | Click izquierdo |
 | Paredes / pisos en línea o rectángulo | Click y arrastrar (la cinta amarilla muestra la medida) |
 | Seleccionar y mover lo ya colocado | Herramienta 🖐 Mover (`V`): click para seleccionar, arrastrar para mover |
-| Rotar | `R` (90°) · `Shift+R` (45°) — o los botones ↺ ↻ 45° del panel |
+| Rotar al colocar | Mantené el click y movete al costado, como en el Sims 1 (90° cada tramo; con `Shift`, 45°) |
+| Rotar algo ya puesto | `Shift` + arrastrar, o `R` (90°) · `Shift+R` (45°), o los botones ↺ ↻ 45° del panel |
 | Pintar / llenar un ambiente entero | `Shift` + click con la brocha o con un solado |
 | Deshacer / rehacer | `Ctrl+Z` / `Ctrl+Y` (también ↶ ↷ arriba) |
 | Mover la cámara | Arrastrar con el botón derecho, flechas o `WASD`, o llevar el cursor a un borde de la pantalla (se enciende una franja verde avisando). El borde de abajo es el de la pantalla, esté el panel a la vista o no |
