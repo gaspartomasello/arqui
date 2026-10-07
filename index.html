@@ -147,7 +147,7 @@
 
   /* Franjas que se encienden cuando la cámara se está desplazando por el borde */
   .eh {
-    position:fixed; pointer-events:none; opacity:0; transition:opacity .14s ease; z-index:18;
+    position:fixed; pointer-events:none; opacity:0; transition:opacity .14s ease; z-index:22;
     display:flex; align-items:center; justify-content:center;
     color:#eafff8; font-size:22px; text-shadow:0 0 10px rgba(0,0,0,.8);
   }
@@ -169,6 +169,27 @@
     border-radius:8px 8px 0 0; border-bottom:none;
   }
   body.sinpanel #bottom { display:none; }
+
+  /* Pantalla de arranque y cartel de pausa */
+  .velo {
+    position:fixed; inset:0; z-index:200; display:flex; align-items:center; justify-content:center;
+    background:radial-gradient(ellipse at center, rgba(14,28,44,.82), rgba(4,8,14,.94));
+    backdrop-filter:blur(3px); -webkit-backdrop-filter:blur(3px);
+  }
+  .velo.oculto { display:none; }
+  .velo .caja { padding:28px 34px 26px; text-align:center; max-width:470px; }
+  .velo h1 { font-size:34px; color:#ffe27a; text-shadow:0 2px 0 #000, 0 0 18px rgba(255,226,122,.35); margin-bottom:4px; }
+  .velo h2 { font-size:24px; color:#ffe27a; text-shadow:0 2px 0 #000; margin-bottom:8px; }
+  .velo p  { font-size:13px; line-height:19px; color:#cfe0f5; margin-bottom:16px; }
+  .velo .chico { font-size:11.5px; line-height:17px; color:#9bb6d4; margin:14px 0 0; }
+  .velo .chico b { color:#ffe27a; }
+  .velo .grande {
+    font-size:19px; padding:13px 26px; margin:0 auto; display:inline-block;
+    background:linear-gradient(180deg,#8ff0d2 0%,#2ea98a 45%,#176353 100%);
+    border-color:#c6fff0; color:#042520; text-shadow:0 1px 0 rgba(255,255,255,.4);
+  }
+  .velo .fila { display:flex; gap:10px; justify-content:center; }
+  .velo .fila .btn { font-size:14px; padding:10px 18px; }
 
   #loading {
     position:fixed; inset:0; display:flex; align-items:center; justify-content:center; flex-direction:column;
@@ -277,13 +298,37 @@
       <b>WASD</b> o flechas · el cursor en el borde también mueve<br>
       <b>, .</b> rotar cámara · <b>Rueda</b> zoom<br>
       <b>Ctrl+Z / Ctrl+Y</b> deshacer / rehacer<br>
-      <b>V</b> seleccionar y mover · <b>X</b> demoler<br>
+      <b>V</b> seleccionar y mover · <b>X</b> demoler · <b>C</b> cancelar<br>
+      <b>ESC</b> pausa<br>
       <b>1 / 2</b> planta baja / piso 1
     </div>
   </div>
 </div>
 
 <div id="loading"><div>CARGANDO TERRENO…</div><div class="bar"><i></i></div></div>
+
+<div class="velo oculto" id="splash">
+  <div class="caja panel">
+    <h1>🏠 Casa Sim</h1>
+    <p>Construí tu casa: paredes, puertas, ventanas, muebles y jardín.<br>
+       Se juega a pantalla completa para que nada moleste.</p>
+    <div class="btn grande" id="btnJugar">▶ JUGAR A PANTALLA COMPLETA</div>
+    <p class="chico">Para pausar en cualquier momento, apretá <b>ESC</b>.</p>
+  </div>
+</div>
+
+<div class="velo oculto" id="pausa">
+  <div class="caja panel">
+    <h2>⏸ JUEGO EN PAUSA</h2>
+    <p>Tu casa quedó congelada tal cual estaba.</p>
+    <div class="fila">
+      <div class="btn" id="btnSeguir">▶ Seguir jugando</div>
+      <div class="btn" id="btnVentana">🪟 Jugar en ventana</div>
+    </div>
+    <p class="chico">Para salir del todo, cerrá la pestaña del navegador.<br>
+       Acordate de bajar tu casa con <b>⬇</b> antes de irte.</p>
+  </div>
+</div>
 
 <!-- ================================================================
      Three.js r160 (build minificado) incluido acá adentro.
@@ -1879,23 +1924,22 @@ function fondoDelTerreno(){
 function acomodarFranjas(){
   const fondo = fondoDelTerreno();
   ehT.style.height = EDGE_PX + 'px';
-  ehB.style.top = (fondo - EDGE_BOTTOM) + 'px';
+  ehB.style.top = (innerHeight - EDGE_BOTTOM) + 'px';   // siempre el fondo de la ventana
   ehB.style.height = EDGE_BOTTOM + 'px';
   ehL.style.width = ehR.style.width = EDGE_PX + 'px';
   ehL.style.height = ehR.style.height = fondo + 'px';
 }
 function updateEdgePan(e){
-  if (!e || panning){ edgeVX = edgeVY = 0; return; }
-  if (e.target && e.target.closest && e.target.closest('#bottom,#topbar,#compass,#panelToggle')){
-    edgeVX = edgeVY = 0; return;
-  }
-  const fondo = fondoDelTerreno();
-  const dentro = e.clientY < fondo;
-  edgeVX = !dentro ? 0
+  if (!e || panning || enPausa || !jugando){ edgeVX = edgeVY = 0; return; }
+  const sobreUI = !!(e.target && e.target.closest &&
+                     e.target.closest('#bottom,#topbar,#compass,#panelToggle'));
+  // El borde de abajo es el de la PANTALLA, esté el panel a la vista o no:
+  // así siempre se baja el cursor hasta el fondo y la cámara acompaña.
+  edgeVY = e.clientY > innerHeight - EDGE_BOTTOM ? -1
+         : (!sobreUI && e.clientY < EDGE_PX)     ?  1 : 0;
+  edgeVX = sobreUI ? 0
          : e.clientX < EDGE_PX ? 1
          : e.clientX > innerWidth - EDGE_PX ? -1 : 0;
-  edgeVY = e.clientY < EDGE_PX ? 1
-         : (e.clientY > fondo - EDGE_BOTTOM && dentro) ? -1 : 0;
 }
 function pintarFranjas(){
   ehL.classList.toggle('on', edgeVX > 0);
@@ -2416,6 +2460,13 @@ dom.addEventListener('wheel', e=>{ e.preventDefault(); zoomCam(e.deltaY>0 ? -1 :
 
 addEventListener('keydown', e=>{
   const k = e.key.toLowerCase();
+  if (!jugando) return;                       // todavía en la pantalla de arranque
+  if (k === 'escape'){
+    e.preventDefault();
+    enPausa ? $('#btnSeguir').click() : pausar();
+    return;
+  }
+  if (enPausa) return;                        // en pausa no se toca nada más
   if ((e.ctrlKey || e.metaKey) && k === 'z'){ e.preventDefault(); e.shiftKey ? redo() : undo(); return; }
   if ((e.ctrlKey || e.metaKey) && k === 'y'){ e.preventDefault(); redo(); return; }
   if (e.ctrlKey || e.metaKey) return;
@@ -2428,7 +2479,7 @@ addEventListener('keydown', e=>{
   }
   else if (k === 'v') pickTool({kind:'select', key:'sel'}, 'Mover', SEL_INFO);
   else if (k === 'g'){ showGrid = !showGrid; applyGrid(); syncViewButtons(); }
-  else if (k === 'escape'){ clearSelection(); pickTool({kind:'select', key:'sel'}, 'Mover', SEL_INFO); }
+  else if (k === 'c'){ clearSelection(); pickTool({kind:'select', key:'sel'}, 'Mover', SEL_INFO); }
   else if (k === 'delete' || k === 'backspace' || k === 'x'){
     if (selObj) deleteSelection();
     else pickTool({kind:'delete', key:'del'}, 'Demoler', 'Click sobre paredes, pisos u objetos para eliminarlos.');
@@ -2914,6 +2965,86 @@ window.casaSim = {
   undo, redo, serialize, loadState,
 };
 
+// =========================================================================
+//  PANTALLA COMPLETA, PAUSA Y ARRANQUE
+// =========================================================================
+const elSplash = $('#splash'), elPausa = $('#pausa');
+let jugando = false, enPausa = false, velocidadPrevia = 1, escCapturado = false;
+
+async function pedirPantallaCompleta(){
+  const el = document.documentElement;
+  const pedir = el.requestFullscreen || el.webkitRequestFullscreen || el.msRequestFullscreen;
+  if (!pedir) return false;
+  try { await pedir.call(el, { navigationUI:'hide' }); } catch(e){
+    try { await pedir.call(el); } catch(e2){ return false; }
+  }
+  return !!document.fullscreenElement;
+}
+// Keyboard Lock: en Chrome y Edge hace que ESC le llegue al juego en vez de
+// sacar de pantalla completa. Para salir de verdad hay que mantenerlo apretado.
+async function capturarEscape(){
+  try {
+    if (navigator.keyboard && navigator.keyboard.lock){
+      await navigator.keyboard.lock(['Escape']);
+      escCapturado = true;
+      return true;
+    }
+  } catch(e){}
+  escCapturado = false;
+  return false;
+}
+function soltarEscape(){
+  try { if (navigator.keyboard && navigator.keyboard.unlock) navigator.keyboard.unlock(); } catch(e){}
+  escCapturado = false;
+}
+function enPantallaCompleta(){ return !!(document.fullscreenElement || document.webkitFullscreenElement); }
+async function salirPantallaCompleta(){
+  soltarEscape();
+  if (!enPantallaCompleta()) return;
+  const salir = document.exitFullscreen || document.webkitExitFullscreen;
+  try { await salir.call(document); } catch(e){}
+}
+
+function pausar(){
+  if (!jugando || enPausa) return;
+  enPausa = true;
+  velocidadPrevia = speed;
+  speed = 0;
+  edgeVX = edgeVY = 0; pintarFranjas();
+  elMeasure.classList.remove('show');
+  elPausa.classList.remove('oculto');
+}
+function reanudar(){
+  if (!enPausa) return;
+  enPausa = false;
+  speed = velocidadPrevia;
+  elPausa.classList.add('oculto');
+}
+
+async function arrancar(){
+  const ok = await pedirPantallaCompleta();
+  if (ok) await capturarEscape();
+  elSplash.classList.add('oculto');
+  jugando = true;
+  speed = velocidadPrevia;
+  if (!ok) toast('Tu navegador no dejó pasar a pantalla completa: se juega en la ventana');
+  else if (!escCapturado) toast('Listo. Con ESC pausás el juego');
+}
+$('#btnJugar').onclick = ()=> arrancar();
+$('#btnSeguir').onclick = async ()=>{
+  if (!enPantallaCompleta()){ const ok = await pedirPantallaCompleta(); if (ok) await capturarEscape(); }
+  reanudar();
+};
+$('#btnVentana').onclick = async ()=>{ await salirPantallaCompleta(); reanudar(); };
+
+// Si se sale de pantalla completa por cualquier vía, el juego se congela
+for (const ev of ['fullscreenchange','webkitfullscreenchange'])
+  document.addEventListener(ev, ()=>{
+    if (!enPantallaCompleta()){ escCapturado = false; pausar(); }
+    acomodarFranjas();
+    renderer.setSize(innerWidth, innerHeight); applyCamera();
+  });
+
 let last = performance.now();
 function animate(now){
   requestAnimationFrame(animate);
@@ -2941,8 +3072,9 @@ if (!saved || !loadState(saved)) starterHouse();
 applyWallMode();
 updateDayNight();
 document.getElementById('loading').style.display = 'none';
+speed = 0;                                    // el reloj espera a que apreten Jugar
+elSplash.classList.remove('oculto');
 requestAnimationFrame(animate);
-toast('Bienvenido: elegí una herramienta y empezá a construir');
 </script>
 </body>
 </html>

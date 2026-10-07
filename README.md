@@ -7,6 +7,11 @@ de **Los Sims 1**. Hecho con Three.js.
 
 Todo en un solo archivo: `index.html`. Se abre en el navegador, sin build ni servidor.
 
+Arranca con una portada y un botón que lo pone **a pantalla completa**, para que nadie
+se distraiga con las pestañas del navegador. `ESC` congela la partida y muestra el cartel
+de pausa. En Chrome y Edge usa *Keyboard Lock*, así que `ESC` no saca de pantalla completa:
+para salir de verdad hay que mantenerlo apretado un par de segundos.
+
 > **No necesita internet.** Three.js viene incluido dentro del archivo y no hay
 > tipografías ni recursos externos: cero pedidos a otros dominios. Anda igual
 > abriéndolo con doble click, servido en una LAN o subido a cualquier hosting.
@@ -24,11 +29,13 @@ GitHub Pages, servidor en la red local (`servidor-lan.py`) o repartir el archivo
 | Rotar | `R` (90°) · `Shift+R` (45°) — o los botones ↺ ↻ 45° del panel |
 | Pintar / llenar un ambiente entero | `Shift` + click con la brocha o con un solado |
 | Deshacer / rehacer | `Ctrl+Z` / `Ctrl+Y` (también ↶ ↷ arriba) |
-| Mover la cámara | Arrastrar con el botón derecho, flechas o `WASD`, o llevar el cursor a un borde (se enciende una franja verde avisando) |
+| Mover la cámara | Arrastrar con el botón derecho, flechas o `WASD`, o llevar el cursor a un borde de la pantalla (se enciende una franja verde avisando). El borde de abajo es el de la pantalla, esté el panel a la vista o no |
 | Ver el terreno a pantalla completa | Botón **▼ Ocultar panel**, abajo a la derecha |
 | Rotar la cámara 90° | `,` y `.` (o `Q` / `E`, o los botones de la brújula) |
 | Zoom | Rueda del mouse o `+` / `-` |
 | Demoler | `X` o `Supr` (también la herramienta 💥) |
+| Cancelar la herramienta | `C` |
+| Pausar | `ESC` |
 | Cuadrícula sí/no | `G` o el botón ▦ del panel Vista |
 | Cambiar de piso | `1` planta baja · `2` piso 1 |
 
