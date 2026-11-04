@@ -8,8 +8,10 @@ ciclo de día y noche. Hecho con Three.js.
 
 Todo en un solo archivo: `index.html`. Se abre en el navegador, sin build ni servidor.
 
-Arranca con una portada y un botón que lo pone **a pantalla completa**, para que nadie
-se distraiga con las pestañas del navegador. `ESC` congela la partida y muestra el cartel
+Arranca con una portada que explica **en cuatro pasos** cómo construir una casa, y un
+botón que lo pone **a pantalla completa** para que nadie se distraiga con las pestañas
+del navegador. El tutorial se puede volver a abrir en cualquier momento con el botón
+**❓** de la barra de arriba (el juego queda en pausa mientras tanto). `ESC` congela la partida y muestra el cartel
 de pausa. En Chrome y Edge usa *Keyboard Lock*, así que `ESC` no saca de pantalla completa:
 para salir de verdad hay que mantenerlo apretado un par de segundos.
 
