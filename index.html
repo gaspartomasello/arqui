@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-<title>Casa Sim — Constructor</title>
+<title>Arqui — constructor de casas</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   html, body {
@@ -14,7 +14,7 @@
   canvas { display:block; }
   #app { position:fixed; inset:0; }
 
-  /* ---------- Marco general estilo Sims 1 ---------- */
+  /* ---------- Marco general de los paneles ---------- */
   .panel {
     background:
       linear-gradient(180deg, rgba(255,255,255,.16), rgba(255,255,255,0) 38%),
@@ -204,7 +204,7 @@
 <body>
 <div id="app"></div>
 
-<div id="hint">🏠 <b>Casa Sim</b> — modo construcción</div>
+<div id="hint">🏠 <b>Arqui</b> — modo construcción</div>
 
 <div id="topbar" class="panel">
   <span class="money">§ ∞</span>
@@ -311,7 +311,7 @@
 
 <div class="velo oculto" id="splash">
   <div class="caja panel">
-    <h1>🏠 Casa Sim</h1>
+    <h1>🏠 Arqui</h1>
     <p>Construí tu casa: paredes, puertas, ventanas, muebles y jardín.<br>
        Se juega a pantalla completa para que nada moleste.</p>
     <div class="btn grande" id="btnJugar">▶ JUGAR A PANTALLA COMPLETA</div>
@@ -356,7 +356,7 @@ const t="160",e={LEFT:0,MIDDLE:1,RIGHT:2,ROTATE:0,DOLLY:1,PAN:2},n={ROTATE:0,PAN
 const THREE = window.THREE;
 
 /* =========================================================================
-   CASA SIM — constructor de casas estilo Los Sims 1
+   ARQUI — constructor de casas en 3D
    ========================================================================= */
 
 // ---------- Constantes del mundo ----------
@@ -445,7 +445,7 @@ lot.rotation.x = -Math.PI/2; lot.position.set(N/2, -0.015, N/2);
 lot.receiveShadow = true;
 scene.add(lot);
 
-// Cuadrícula estilo Sims (se puede apagar desde el panel Vista)
+// Cuadrícula del terreno (se puede apagar desde el panel Vista)
 const gridHelper = new THREE.GridHelper(N, N, 0xffffff, 0xd9e6c8);
 gridHelper.material.transparent = true;
 gridHelper.material.opacity = 0.28;
@@ -2397,8 +2397,8 @@ function deleteSelection(){
 // --------- Mover con el mouse ---------
 let dragObj = null, dragOrig = null, grabOff = {x:0,z:0}, dragMoved = false;
 
-// Girar arrastrando, como en el Sims 1: se mantiene el click y se mueve el mouse
-// para los costados. 90° cada 70 px; con Shift, 45° cada 38 px.
+// Girar arrastrando: se mantiene el click y se mueve el mouse para los
+// costados. 90° cada 70 px; con Shift, 45° cada 38 px.
 let rotDrag = null, rotGesto = null;
 function rotAlArrastrar(rot0, x0, ev, fino){
   const paso = fino ? 1 : 2;              // 45° u 90° por tramo
@@ -2712,7 +2712,7 @@ function setMode(m){
   activeCat = m==='build' ? 'muros' : 'asientos';
   renderCats(); renderItems();
   pickTool({kind:'select', key:'sel'}, 'Mover', SEL_INFO);
-  $('#hint').innerHTML = m==='build' ? '🏠 <b>Casa Sim</b> — modo construcción' : '🏠 <b>Casa Sim</b> — modo compras';
+  $('#hint').innerHTML = m==='build' ? '🏠 <b>Arqui</b> — modo construcción' : '🏠 <b>Arqui</b> — modo compras';
 }
 $('#tabBuild').onclick = ()=>setMode('build');
 $('#tabBuy').onclick   = ()=>setMode('buy');
@@ -2846,7 +2846,9 @@ function applyLamps(){
 // =========================================================================
 //  GUARDAR / CARGAR
 // =========================================================================
-const SAVE_KEY = 'casa-sim-v2';
+const SAVE_KEY = 'arqui-v1';
+// Claves anteriores: las casas guardadas antes del cambio de nombre siguen abriéndose
+const SAVE_KEYS_VIEJAS = ['casa-sim-v2', 'casa-sim-v1'];
 function serialize(){
   return JSON.stringify({
     v:2,
@@ -2902,7 +2904,8 @@ function loadState(txt){
 }
 $('#btnSave').onclick = ()=>{ localStorage.setItem(SAVE_KEY, serialize()); toast('Casa guardada 💾'); };
 $('#btnLoad').onclick = ()=>{
-  const t = localStorage.getItem(SAVE_KEY) || localStorage.getItem('casa-sim-v1');
+  let t = localStorage.getItem(SAVE_KEY);
+  for (const k of SAVE_KEYS_VIEJAS) if (!t) t = localStorage.getItem(k);
   if (!t){ toast('No hay ninguna casa guardada'); return; }
   const before = serialize();
   if (loadState(t)){ commitChange(before); toast('Casa cargada 📂'); } else toast('El guardado está dañado');
@@ -2916,7 +2919,7 @@ function nombreDeArchivo(txt){
 $('#btnExport').onclick = ()=>{
   const nombre = prompt('¿Cómo se llama tu casa? (podés poner tu nombre)', 'mi casa');
   if (nombre === null) return;
-  const datos = { juego:'casa-sim', formato:2, nombre, fecha:new Date().toISOString(),
+  const datos = { juego:'arqui', formato:2, nombre, fecha:new Date().toISOString(),
                   casa: JSON.parse(serialize()) };
   const url = URL.createObjectURL(new Blob([JSON.stringify(datos)], { type:'application/json' }));
   const a = document.createElement('a');
@@ -2936,7 +2939,7 @@ inputCasa.onchange = ()=>{
     try { const d = JSON.parse(txt); if (d && d.casa) txt = JSON.stringify(d.casa); } catch(e){}
     const before = serialize();
     if (loadState(txt)){ commitChange(before); toast('Casa abierta: ' + archivo.name); }
-    else toast('Ese archivo no parece una casa de Casa Sim');
+    else toast('Ese archivo no parece una casa de Arqui');
   };
   lector.onerror = ()=> toast('No pude leer el archivo');
   lector.readAsText(archivo);
@@ -3031,7 +3034,7 @@ function starterHouse(){
 // =========================================================================
 //  LOOP
 // =========================================================================
-window.casaSim = {
+window.arqui = {
   THREE, state, CATALOG, camera, scene, renderer,
   get time(){ return timeMin; },
   setTime(t){ timeMin = ((t%1440)+1440)%1440; updateDayNight(); },

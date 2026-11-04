@@ -1,4 +1,4 @@
-# Cómo poner Casa Sim a disposición de los alumnos
+# Cómo poner Arqui a disposición de los alumnos
 
 `index.html` es **un solo archivo que no le pide nada a internet**: Three.js viene
 adentro y no hay tipografías, imágenes ni scripts externos. Verificado con todo
@@ -38,7 +38,7 @@ arrastrar y soltar, sin cuenta ni configuración:
 | Servicio | Dirección | Cómo |
 |---|---|---|
 | Netlify Drop | app.netlify.com/drop | Arrastrás la carpeta, te da una URL `*.netlify.app` (podés elegir el nombre) |
-| Cloudflare Pages | pages.cloudflare.com | Subís la carpeta, te da `*.pages.dev` — con el nombre `casa-sim` queda `casa-sim.pages.dev`, todavía más corto |
+| Cloudflare Pages | pages.cloudflare.com | Subís la carpeta, te da `*.pages.dev` — con el nombre `arqui` queda `arqui.pages.dev`, todavía más corto |
 | Vercel | vercel.com | Igual, te da `*.vercel.app` |
 | Neocities | neocities.org | Hosting simple de páginas, `*.neocities.org` |
 
@@ -77,7 +77,7 @@ Dos cosas a tener en cuenta:
 
 Como el juego es un archivo suelto y autosuficiente, podés pasarles `index.html`
 por Classroom, mail, Drive o pendrive. Lo bajan, le hacen doble click y juegan,
-con o sin internet. Conviene renombrarlo a `casa-sim.html` para que se entienda.
+con o sin internet. Conviene renombrarlo a `arqui.html` para que se entienda.
 
 Es la salida más robusta si el filtro de la escuela no deja pasar nada.
 

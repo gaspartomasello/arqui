@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Servidor para jugar a Casa Sim en la red del aula (no necesita internet).
+Servidor para jugar a Arqui en la red del aula (no necesita internet).
 
 Uso:
     python3 servidor-lan.py            # puerto 8080
@@ -57,7 +57,7 @@ class Servidor(socketserver.ThreadingTCPServer):
 if __name__ == "__main__":
     ips = direcciones_lan()
     print()
-    print("  🏠  CASA SIM — servidor del aula")
+    print("  🏠  ARQUI — servidor del aula")
     print("  " + "-" * 46)
     if ips:
         print("  Los alumnos entran a:")

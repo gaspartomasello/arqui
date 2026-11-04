@@ -1,7 +1,8 @@
-# Casa Sim
+# Arqui
 
-Constructor de casas 3D en el navegador, inspirado en el modo Construir/Comprar
-de **Los Sims 1**. Hecho con Three.js.
+Constructor de casas en 3D para el navegador: se dibuja la planta, se levantan
+las paredes, se eligen los revestimientos y se amuebla, con vista isométrica y
+ciclo de día y noche. Hecho con Three.js.
 
 **Para jugar: [gaspartomasello.github.io/arqui](https://gaspartomasello.github.io/arqui/)**
 
@@ -26,7 +27,7 @@ GitHub Pages, servidor en la red local (`servidor-lan.py`) o repartir el archivo
 | Colocar | Click izquierdo |
 | Paredes / pisos en línea o rectángulo | Click y arrastrar (la cinta amarilla muestra la medida) |
 | Seleccionar y mover lo ya colocado | Herramienta 🖐 Mover (`V`): click para seleccionar, arrastrar para mover |
-| Rotar al colocar | Mantené el click y movete al costado, como en el Sims 1 (90° cada tramo; con `Shift`, 45°) |
+| Rotar al colocar | Mantené el click y movete al costado (90° cada tramo; con `Shift`, 45°) |
 | Rotar algo ya puesto | `Shift` + arrastrar, o `R` (90°) · `Shift+R` (45°), o los botones ↺ ↻ 45° del panel |
 | Pintar / llenar un ambiente entero | `Shift` + click con la brocha o con un solado |
 | Deshacer / rehacer | `Ctrl+Z` / `Ctrl+Y` (también ↶ ↷ arriba) |
@@ -63,7 +64,7 @@ GitHub Pages, servidor en la red local (`servidor-lan.py`) o repartir el archivo
 
 **Vista**
 - Dos plantas, con paredes **Altas / Auto / Cortadas / Bajas**. En modo **Auto** bajan solas
-  las paredes que taparían la habitación desde el ángulo actual de la cámara, como en el Sims.
+  las paredes que taparían la habitación desde el ángulo actual de la cámara.
 - Sombras de contacto bajo los muebles (se pueden apagar).
 - Contorno de resaltado al pasar el mouse, para saber qué vas a mover o demoler.
 - Ciclo de día y noche con reloj y velocidades: al anochecer las lámparas se encienden solas.
@@ -75,5 +76,5 @@ con **⬆** abrís cualquiera de esos archivos.
 Algunos objetos se apoyan sobre otros (el microondas sobre la mesada, la lámpara sobre la mesa de
 luz, la planta chica sobre una mesa) y otros se cuelgan de la pared o del techo.
 
-Desde la consola del navegador hay un hook para trastear: `casaSim.setTime(22*60)`,
-`casaSim.state`, `casaSim.undo()`, etc.
+Desde la consola del navegador hay un hook para trastear: `arqui.setTime(22*60)`,
+`arqui.state`, `arqui.undo()`, etc.
